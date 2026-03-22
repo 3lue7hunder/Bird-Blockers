@@ -1175,13 +1175,14 @@ section {
 
     /* Navbar sits below top bar */
     .navbar {
-        top: 37px;
+        top: 40px;
+        padding-top: 10px;
     }
 
     /* Mobile menu needs to account for top bar + navbar */
     .nav-menu {
         position: fixed;
-        top: 117px; /* top bar + navbar height */
+        top: 50px; /* top bar + navbar height */
         left: -100%;
         width: 100%;
         height: calc(100vh - 117px);
