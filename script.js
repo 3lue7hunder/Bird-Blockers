@@ -208,6 +208,24 @@ emailInput.addEventListener('blur', function () {
     this.style.borderColor = emailRegex.test(this.value) ? 'var(--success)' : 'var(--error)';
 });
 
+// Auto-format phone number as xxx-xxx-xxxx while typing
+phoneInput.addEventListener('input', function () {
+    // Strip everything except digits
+    let digits = this.value.replace(/\D/g, '');
+
+    // Limit to 10 digits
+    digits = digits.substring(0, 10);
+
+    // Apply xxx-xxx-xxxx mask
+    if (digits.length <= 3) {
+        this.value = digits;
+    } else if (digits.length <= 6) {
+        this.value = digits.slice(0, 3) + '-' + digits.slice(3);
+    } else {
+        this.value = digits.slice(0, 3) + '-' + digits.slice(3, 6) + '-' + digits.slice(6);
+    }
+});
+
 phoneInput.addEventListener('blur', function () {
     const digits = this.value.replace(/\D/g, '');
     this.style.borderColor = digits.length >= 10 ? 'var(--success)' : 'var(--error)';
