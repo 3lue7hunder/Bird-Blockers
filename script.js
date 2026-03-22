@@ -91,116 +91,82 @@ document.querySelectorAll('.problem-card, .service-item, .gallery-item, .process
 });
 
 // ===================================
-// Form Handling
+// Form Handling — Netlify
 // ===================================
 
 const quoteForm = document.getElementById('quoteForm');
 const formSuccess = document.getElementById('formSuccess');
+const submitButton = quoteForm.querySelector('button[type="submit"]');
+const originalButtonHTML = submitButton.innerHTML;
 
 quoteForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
-    // Get form data
-    const formData = {
-        panels: document.getElementById('panels').value,
-        stories: document.getElementById('stories').value,
-        problems: document.getElementById('problems').value,
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        address: document.getElementById('address').value,
-        additional: document.getElementById('additional').value,
-        timestamp: new Date().toLocaleString()
-    };
-    
-    // For demonstration purposes, log the form data
-    console.log('Form submitted:', formData);
-    
-    // In production, you would send this data to your backend
-    // Example:
-    /*
+    setFormLoading(true);
+
+    // Collect all form fields including the hidden Netlify fields
+    const formData = new FormData(quoteForm);
+
     try {
-        const response = await fetch('/api/submit-quote', {
+        const response = await fetch('/', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(formData).toString()
         });
-        
+
         if (response.ok) {
-            // Show success message
+            // Hide the form and show the success message
             quoteForm.style.display = 'none';
             formSuccess.style.display = 'block';
-            
-            // Send email and SMS notification to business owner
-            // This would be handled by your backend
+            formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            alert('Something went wrong submitting your request. Please try again or call us directly.');
+            setFormLoading(false);
         }
-    } catch (error) {
-        console.error('Error submitting form:', error);
-        alert('There was an error submitting your request. Please try again or call us directly.');
+    } catch (err) {
+        console.error('Form submission error:', err);
+        alert('Submission failed. Please check your connection and try again, or call us directly.');
+        setFormLoading(false);
     }
-    */
-    
-    // For now, simulate successful submission
-    setTimeout(() => {
-        quoteForm.style.display = 'none';
-        formSuccess.style.display = 'block';
-        
-        // Scroll to success message
-        formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        
-        // Create email content for business owner
-        const emailSubject = `New Quote Request from ${formData.name}`;
-        const emailBody = `
-New Quote Request Received:
-
-Customer Information:
-- Name: ${formData.name}
-- Email: ${formData.email}
-- Phone: ${formData.phone}
-- Address: ${formData.address}
-
-Service Details:
-- Number of Panels: ${formData.panels}
-- Home Type: ${formData.stories}
-- Problems Experienced: ${formData.problems}
-
-Additional Notes:
-${formData.additional || 'None provided'}
-
-Submitted: ${formData.timestamp}
-
-Please contact this customer within 24 hours.
-        `.trim();
-        
-        console.log('Email to be sent:', {
-            to: 'business@birdblockers.com', // Replace with your business email
-            subject: emailSubject,
-            body: emailBody
-        });
-        
-        // SMS notification content
-        const smsMessage = `New quote request from ${formData.name}. ${formData.panels} panels, ${formData.stories}. Phone: ${formData.phone}`;
-        
-        console.log('SMS to be sent:', {
-            to: '+1234567890', // Replace with your business phone
-            message: smsMessage
-        });
-        
-    }, 500);
 });
 
 // ===================================
-// Gallery Image Modal (Optional Enhancement)
+// Loading State for Form Submission
+// ===================================
+
+function setFormLoading(isLoading) {
+    if (isLoading) {
+        submitButton.disabled = true;
+        submitButton.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="animation: spin 1s linear infinite;">
+                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" 
+                        stroke-dasharray="40 10" stroke-linecap="round" opacity="0.8"/>
+            </svg>
+            Submitting...
+        `;
+    } else {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalButtonHTML;
+    }
+}
+
+// Add spin animation for loading spinner
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+`;
+document.head.appendChild(style);
+
+// ===================================
+// Gallery Image Click (placeholder for lightbox)
 // ===================================
 
 document.querySelectorAll('.gallery-image').forEach(image => {
     image.style.cursor = 'pointer';
     image.addEventListener('click', function() {
-        // This is a placeholder for a lightbox/modal functionality
-        // You could implement a full-screen image viewer here
-        console.log('Image clicked - implement lightbox modal if desired');
+        // Implement a lightbox/modal here if desired
     });
 });
 
@@ -215,7 +181,6 @@ window.addEventListener('scroll', () => {
     
     sections.forEach(section => {
         const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
         const navHeight = navbar.offsetHeight;
         
         if (window.pageYOffset >= (sectionTop - navHeight - 100)) {
@@ -232,79 +197,25 @@ window.addEventListener('scroll', () => {
 });
 
 // ===================================
-// Form Validation Enhancement
+// Real-Time Form Validation
 // ===================================
 
-// Add real-time validation
 const emailInput = document.getElementById('email');
 const phoneInput = document.getElementById('phone');
 
-emailInput.addEventListener('blur', function() {
+emailInput.addEventListener('blur', function () {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(this.value)) {
-        this.style.borderColor = 'var(--error)';
-    } else {
-        this.style.borderColor = 'var(--success)';
-    }
+    this.style.borderColor = emailRegex.test(this.value) ? 'var(--success)' : 'var(--error)';
 });
 
-phoneInput.addEventListener('blur', function() {
-    // Basic phone validation (formats: 1234567890, 123-456-7890, (123) 456-7890)
-    const phoneRegex = /^[\d\s\-\(\)]+$/;
-    if (!phoneRegex.test(this.value) || this.value.replace(/\D/g, '').length < 10) {
-        this.style.borderColor = 'var(--error)';
-    } else {
-        this.style.borderColor = 'var(--success)';
-    }
+phoneInput.addEventListener('blur', function () {
+    const digits = this.value.replace(/\D/g, '');
+    this.style.borderColor = digits.length >= 10 ? 'var(--success)' : 'var(--error)';
 });
 
-// Reset border colors on focus
+// Reset border color on focus
 [emailInput, phoneInput].forEach(input => {
-    input.addEventListener('focus', function() {
+    input.addEventListener('focus', function () {
         this.style.borderColor = 'var(--primary-color)';
     });
 });
-
-// ===================================
-// Loading State for Form Submission
-// ===================================
-
-const submitButton = quoteForm.querySelector('button[type="submit"]');
-const originalButtonText = submitButton.innerHTML;
-
-// You can use this function when implementing actual form submission
-function setFormLoading(isLoading) {
-    if (isLoading) {
-        submitButton.disabled = true;
-        submitButton.innerHTML = `
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="animation: spin 1s linear infinite;">
-                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" stroke-dasharray="50" stroke-linecap="round" opacity="0.3"/>
-            </svg>
-            Submitting...
-        `;
-    } else {
-        submitButton.disabled = false;
-        submitButton.innerHTML = originalButtonText;
-    }
-}
-
-// Add spin animation for loading spinner
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-`;
-document.head.appendChild(style);
-
-// ===================================
-// Console Message
-// ===================================
-
-console.log('%c🐦 Bird Blockers Website', 'color: #2c5282; font-size: 20px; font-weight: bold;');
-console.log('%cTo integrate this with your backend:', 'color: #4a5568; font-size: 14px;');
-console.log('%c1. Set up email service (e.g., SendGrid, AWS SES, or SMTP)', 'color: #718096; font-size: 12px;');
-console.log('%c2. Set up SMS service (e.g., Twilio)', 'color: #718096; font-size: 12px;');
-console.log('%c3. Create API endpoint to receive form submissions', 'color: #718096; font-size: 12px;');
-console.log('%c4. Update the fetch URL in the form submission handler', 'color: #718096; font-size: 12px;');

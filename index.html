@@ -107,15 +107,10 @@
                 <div class="problem-card">
                     <div class="problem-icon">
                         <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                            <!-- Battery outline -->
                             <rect x="10" y="16" width="26" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
-                            <!-- Battery terminal -->
                             <rect x="36" y="22" width="4" height="4" fill="currentColor"/>
-                            <!-- Low battery level (red zone) -->
                             <rect x="13" y="19" width="6" height="10" fill="currentColor" opacity="0.6"/>
-                            <!-- Arrow pointing down (decreasing) -->
                             <path d="M24 8L24 14M21 11L24 14L27 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <!-- Warning indicator -->
                             <circle cx="20" cy="24" r="1.5" fill="currentColor"/>
                         </svg>
                     </div>
@@ -128,16 +123,10 @@
                 <div class="problem-card">
                     <div class="problem-icon">
                         <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                            <!-- Flame icon -->
                             <path d="M24 8C24 8 16 16 16 24C16 28.4183 19.5817 32 24 32C28.4183 32 32 28.4183 32 24C32 20 28 16 28 16C28 16 30 20 30 22C30 24 28.5 26 26 26C26 26 26 22 24 18C22 22 20 24 20 26C20 28 21.5 30 24 30" 
-                                  stroke="currentColor" 
-                                  stroke-width="2" 
-                                  stroke-linecap="round" 
-                                  stroke-linejoin="round"/>
-                            <!-- Inner flame detail -->
+                                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M24 20C24 20 22 23 22 25C22 26.1046 22.8954 27 24 27C25.1046 27 26 26.1046 26 25C26 23.5 24.5 21.5 24 20Z" 
-                                  fill="currentColor" 
-                                  opacity="0.3"/>
+                                  fill="currentColor" opacity="0.3"/>
                         </svg>
                     </div>
                     <div class="problem-content">
@@ -149,13 +138,9 @@
                 <div class="problem-card">
                     <div class="problem-icon">
                         <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                            <!-- Roof/house outline -->
                             <path d="M24 10L12 20V36H36V20L24 10Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                            <!-- Roof tiles/shingles -->
                             <path d="M16 22H32M16 26H32M16 30H32" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
-                            <!-- Crack in roof -->
                             <path d="M24 16L26 20L24 24L22 20L24 16Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <!-- Water drops leaking -->
                             <ellipse cx="22" cy="28" rx="1.5" ry="2" fill="currentColor" opacity="0.6"/>
                             <ellipse cx="26" cy="30" rx="1.5" ry="2" fill="currentColor" opacity="0.6"/>
                             <ellipse cx="24" cy="32" rx="1.5" ry="2" fill="currentColor" opacity="0.6"/>
@@ -170,21 +155,13 @@
                 <div class="problem-card">
                     <div class="problem-icon">
                         <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                            <!-- Shield with medical cross -->
                             <path d="M24 6L12 11V21C12 28.5 16.5 35.5 24 38C31.5 35.5 36 28.5 36 21V11L24 6Z" 
-                                  stroke="currentColor" 
-                                  stroke-width="2" 
-                                  stroke-linejoin="round"/>
-                            <!-- Warning/alert symbol inside -->
+                                  stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
                             <circle cx="24" cy="20" r="2" fill="currentColor"/>
                             <circle cx="24" cy="26" r="2" fill="currentColor"/>
                             <circle cx="24" cy="32" r="2" fill="currentColor"/>
-                            <!-- Biohazard curves (simplified) -->
                             <path d="M24 18C21 18 19 20 19 22M24 18C27 18 29 20 29 22" 
-                                  stroke="currentColor" 
-                                  stroke-width="1.5" 
-                                  stroke-linecap="round"
-                                  opacity="0.5"/>
+                                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
                         </svg>
                     </div>
                     <div class="problem-content">
@@ -424,8 +401,28 @@
                         </div>
                     </div>
                 </div>
-                
-                <form id="quoteForm" class="quote-form">
+
+                <!-- =============================================
+                     NETLIFY FORM
+                     - name="quote-request" tells Netlify the form name
+                     - netlify attribute enables Netlify form detection
+                     - netlify-honeypot hides a spam trap field
+                ============================================= -->
+                <form 
+                    id="quoteForm" 
+                    class="quote-form"
+                    name="quote-request"
+                    netlify
+                    netlify-honeypot="bot-field"
+                >
+                    <!-- Hidden field required by Netlify for AJAX submissions -->
+                    <input type="hidden" name="form-name" value="quote-request">
+
+                    <!-- Honeypot spam trap — hidden from real users -->
+                    <p style="display:none">
+                        <label>Don't fill this out: <input name="bot-field"></label>
+                    </p>
+
                     <div class="form-section">
                         <h3>Service Details</h3>
                         
